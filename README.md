@@ -9,7 +9,9 @@ personal-book-library/
 ├── backend/          # Node.js + Express
 ├── frontend/         # React + Vite
 ├── uploads/          # ไฟล์อัปโหลด
-└── api-collection/   # Bruno (.bru) ชุดทดสอบ API endpoint
+├── api-collection/   # Bruno (.bru) ชุดทดสอบ API endpoint
+├── data_dictionary.md
+└── usecase.md
 ```
 
 ## Frontend — สร้างและรัน
