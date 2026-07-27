@@ -1,122 +1,82 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+// ref: 37aa88161f
+// App = ตัวคุมหลักของหน้าเว็บ
+// - ยังไม่ล็อกอิน → โชว์ Login + ข้อความ Auth Guard
+// - ล็อกอินแล้ว → โชว์หน้า Home (placeholder ก่อนมีหน้าหนังสือ)
 
-function App() {
-  const [count, setCount] = useState(0)
+import { useEffect, useState } from "react";
+import Login from "./components/Login";
+import { clearToken, getToken, getUserFromToken } from "./api";
+import "./App.css";
+
+/**
+ * Home: หน้าหลัง login
+ * แสดงว่าเป็น admin หรือ user จากข้อมูลใน JWT
+ */
+function Home({ onLogout }) {
+  // อ่าน role จาก token ที่เก็บไว้
+  const user = getUserFromToken();
+  const role = user?.role || "-";
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
+    <div className="home-page">
+      <header className="home-header">
+        <h1>Personal Book Library</h1>
+        <button type="button" onClick={onLogout}>
+          ออกจากระบบ
         </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+      </header>
+      <main className="home-main">
+        <p>เข้าสู่ระบบสำเร็จแล้ว</p>
+        {/* โชว์บทบาท: admin หรือ user */}
+        <p className="home-note">บทบาท: {role}</p>
+      </main>
+    </div>
+  );
 }
 
-export default App
+export default function App() {
+  // useState = state ใน React — เปลี่ยนค่าแล้วหน้าจอจะเรนเดอร์ใหม่
+  // เริ่มจากดูว่ามี token ใน localStorage อยู่แล้วหรือไม่
+  const [authed, setAuthed] = useState(() => Boolean(getToken()));
+  const [guardMessage, setGuardMessage] = useState("");
+
+  // useEffect รันหลังเรนเดอร์ครั้งแรก ([] = รันครั้งเดียวตอน mount)
+  // Auth Guard: ไม่มี token → บังคับไปหน้า login + โชว์ข้อความ
+  useEffect(() => {
+    if (!getToken()) {
+      setAuthed(false);
+      setGuardMessage("กรุณาเข้าสู่ระบบก่อนใช้งาน");
+    }
+  }, []);
+
+  function handleLogout() {
+    clearToken();
+    setAuthed(false);
+    setGuardMessage("กรุณาเข้าสู่ระบบก่อนใช้งาน");
+  }
+
+  // ยังไม่ล็อกอิน → แสดง Login
+  if (!authed) {
+    return (
+      <>
+        {/* เงื่อนไขใน JSX: มีข้อความค่อยโชว์แบนเนอร์ */}
+        {guardMessage ? (
+          <p className="guard-banner" role="status">
+            {guardMessage}
+          </p>
+        ) : null}
+
+        {/* onSuccess = callback ให้ Login เรียกเมื่อเข้าสู่ระบบสำเร็จ */}
+        <Login
+          onSuccess={() => {
+            setGuardMessage("");
+            setAuthed(true);
+          }}
+        />
+      </>
+    );
+  }
+
+  // ล็อกอินแล้ว → แสดง Home
+  return <Home onLogout={handleLogout} />;
+}

@@ -37,29 +37,66 @@ cd frontend
 npm install
 ```
 
-## ตั้งค่า Environment Variable
+## ตั้งค่า Environment Variable (สำคัญ)
 
-ในโฟลเดอร์ `backend/` คัดลอกไฟล์ตัวอย่างแล้วแก้ค่าตามต้องการ:
+ไฟล์ `.env` **ไม่ถูก commit ขึ้น GitHub** (อยู่ใน `.gitignore`)  
+ดังนั้นคนที่ clone โปรเจกต์มาต้องสร้างเองทุกครั้งก่อนรัน Backend
+
+### ขั้นตอนตั้งค่า Backend
+
+1. เข้าโฟลเดอร์ backend
+2. คัดลอกไฟล์ตัวอย่างเป็น `.env`
+3. เปิด `.env` แล้วตรวจ/แก้ค่าตามตารางด้านล่าง
+
+**Windows (PowerShell / CMD):**
 
 ```bash
 cd backend
 copy .env.example .env
 ```
 
-(บน macOS/Linux ใช้ `cp .env.example .env`)
+**macOS / Linux:**
 
-ตัวแปรที่จำเป็นใน `backend/.env`:
+```bash
+cd backend
+cp .env.example .env
+```
 
-| ตัวแปร | ความหมาย | ตัวอย่าง |
-|--------|----------|----------|
-| `PORT` | พอร์ต Backend | `3000` |
-| `JWT_SECRET` | รหัสลับสำหรับเซ็น/ตรวจ JWT | `change-me` |
-| `JWT_EXPIRES_IN` | อายุ token | `1h` |
-| `DB_PATH` | path ไฟล์ SQLite | `./data/library.db` |
-| `UPLOADS_PATH` | โฟลเดอร์อัปโหลด | `../uploads` |
+### ตัวอย่างเนื้อหา `backend/.env`
 
-หมายเหตุ: Frontend เรียก API ที่ `http://localhost:3000` เป็นค่าเริ่มต้น  
-ถ้าต้องการเปลี่ยน ตั้ง `VITE_API_URL` ตอนรัน/สร้าง frontend ได้
+```env
+PORT=3000
+JWT_SECRET=change-me
+JWT_EXPIRES_IN=1h
+UPLOADS_PATH=../uploads
+DB_PATH=./data/library.db
+```
+
+### อธิบายแต่ละตัวแปร
+
+| ตัวแปร | ต้องตั้งไหม | ความหมาย | ค่าที่แนะนำตอนทดสอบ |
+|--------|-------------|----------|----------------------|
+| `PORT` | แนะนำ | พอร์ตที่ Backend เปิดรอ | `3000` |
+| `JWT_SECRET` | **จำเป็น** | รหัสลับใช้เซ็นและตรวจ JWT — ต้องตรงกันตอน login และตอนตรวจ token | ทดสอบใช้ `change-me` ได้ บนของจริงควรเปลี่ยนเป็นข้อความยาวๆ ยากเดา |
+| `JWT_EXPIRES_IN` | ไม่บังคับ | อายุของ token หลัง login | `1h` = 1 ชั่วโมง |
+| `DB_PATH` | ไม่บังคับ | ที่อยู่ไฟล์ฐานข้อมูล SQLite (สัมพัทธ์จากโฟลเดอร์ `backend/`) | `./data/library.db` → ได้ไฟล์ที่ `backend/data/library.db` |
+| `UPLOADS_PATH` | ไม่บังคับ | path โฟลเดอร์อัปโหลด | `../uploads` |
+
+### สิ่งที่เกิดขึ้นหลังรัน Backend
+
+ถ้ายังไม่มีไฟล์ database ระบบจะสร้างให้อัตโนมัติที่ `backend/data/library.db`  
+พร้อมตาราง `users` และบัญชีทดสอบ (`admin`, `alice`)
+
+### Frontend (ถ้าต้องการเปลี่ยน URL ของ API)
+
+ค่าเริ่มต้น Frontend เรียก `http://localhost:3000` อยู่แล้ว  
+ถ้า Backend อยู่คนละที่ ให้สร้างไฟล์ `frontend/.env` เช่น:
+
+```env
+VITE_API_URL=http://localhost:3000
+```
+
+จากนั้นรัน `npm run dev` ใหม่ในโฟลเดอร์ `frontend`
 
 ## วิธีรัน
 
