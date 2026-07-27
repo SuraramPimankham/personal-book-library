@@ -1,10 +1,12 @@
 // ref: 37aa88161f
 // Route สำหรับ login — ตรวจ username/password แล้วออก JWT
+// และ GET /users สำหรับ admin ใช้ใส่ dropdown
 
 import { Router } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { findUserByUsername } from "../db.js";
+import { authenticate } from "../middleware/auth.js";
+import { findUserByUsername, listUsernames } from "../db.js";
 
 const router = Router();
 
@@ -35,6 +37,17 @@ router.post("/login", (req, res) => {
 
   // ส่ง token กลับไปให้ Frontend เก็บใน localStorage
   return res.json({ token });
+});
+
+/**
+ * GET /api/users
+ * ให้ admin ดึงรายชื่อ user ไปใส่ dropdown เจ้าของคลัง
+ */
+router.get("/users", authenticate, (req, res) => {
+  if (req.user.role !== "admin") {
+    return res.status(403).json({ error: "Admin only" });
+  }
+  return res.json(listUsernames());
 });
 
 export default router;

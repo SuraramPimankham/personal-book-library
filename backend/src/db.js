@@ -120,6 +120,13 @@ export function findUserByUsername(username) {
   return db.prepare("SELECT * FROM users WHERE username = ?").get(username);
 }
 
+// รายชื่อ username ทั้งหมด (ให้ admin เลือกเจ้าของคลังใน dropdown)
+export function listUsernames() {
+  return db
+    .prepare("SELECT username, role FROM users ORDER BY username ASC")
+    .all();
+}
+
 // ดึงหนังสือทั้งหมด (สำหรับ admin)
 export function listAllBooks() {
   return db.prepare("SELECT * FROM books ORDER BY id DESC").all();

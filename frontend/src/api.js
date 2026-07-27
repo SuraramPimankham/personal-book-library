@@ -89,3 +89,46 @@ export async function apiFetch(path, options = {}) {
 
   return res;
 }
+
+/** ดึงรายการหนังสือ (Backend กรองตาม role ให้แล้ว) */
+export async function fetchBooks() {
+  const res = await apiFetch("/api/books");
+  const data = await res.json().catch(() => ([]));
+  if (!res.ok) {
+    throw new Error(data.error || "Failed to load books");
+  }
+  return data;
+}
+
+/** เพิ่มหนังสือใหม่ */
+export async function createBook(payload) {
+  const res = await apiFetch("/api/books", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    throw new Error(data.error || "Failed to add book");
+  }
+  return data;
+}
+
+/** ลบหนังสือตาม id */
+export async function deleteBook(id) {
+  const res = await apiFetch(`/api/books/${id}`, { method: "DELETE" });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    throw new Error(data.error || "Failed to delete book");
+  }
+  return data;
+}
+
+/** ดึงรายชื่อ user (admin ใช้ใส่ dropdown เจ้าของคลัง) */
+export async function fetchUsers() {
+  const res = await apiFetch("/api/users");
+  const data = await res.json().catch(() => ([]));
+  if (!res.ok) {
+    throw new Error(data.error || "Failed to load users");
+  }
+  return data;
+}
