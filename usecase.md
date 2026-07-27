@@ -36,7 +36,8 @@ flowchart TB
 | username | password | role |
 |----------|----------|------|
 | `admin` | `password123` | `admin` |
-| `alice` | `password123` | `user` |
+| `spk1` | `password123` | `user` |
+| `spk2` | `password123` | `user` |
 
 ```mermaid
 sequenceDiagram
@@ -153,9 +154,9 @@ sequenceDiagram
 
 | รายการ | รายละเอียด |
 |--------|------------|
-| Actor | Admin + User (`alice`) |
+| Actor | Admin + User (`spk1`) |
 | Goal | พิสูจน์ว่า role ทำงานถูกต้อง |
-| Main flow | 1. `alice` (user) เพิ่มหนังสือ → เห็นเฉพาะของตัวเอง<br>2. `admin` ล็อกอิน → เห็นหนังสือของ alice ด้วย<br>3. `alice` พยายามลบหนังสือของคนอื่น → ไม่ได้<br>4. `admin` ลบหนังสือของ alice ได้ |
+| Main flow | 1. `spk1` (user) เพิ่มหนังสือ → เห็นเฉพาะของตัวเอง<br>2. `admin` ล็อกอิน → เห็นหนังสือของ spk1 ด้วย<br>3. `spk1` พยายามลบหนังสือของคนอื่น → ไม่ได้<br>4. `admin` ลบหนังสือของ spk1 ได้ |
 | Postcondition | User ถูกจำกัดคลังส่วนตัว; Admin ดูแลทั้งระบบ |
 
 ---

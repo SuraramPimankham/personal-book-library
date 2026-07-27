@@ -82,7 +82,7 @@ export default function Login({ onSuccess }) {
         </button>
 
         <p className="login-hint">
-          ทดสอบ: admin / password123 หรือ alice / password123
+          ทดสอบ: admin / spk1 / spk2 (รหัสผ่าน password123)
         </p>
       </form>
     </div>

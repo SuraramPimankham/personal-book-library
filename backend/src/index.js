@@ -7,9 +7,10 @@ dotenv.config();
 
 import express from "express";
 import cors from "cors";
-// นำเข้า db.js เพื่อให้สร้างตาราง + seed user ทันทีตอนสตาร์ทเซิร์ฟเวอร์
+// นำเข้า db.js เพื่อให้สร้างตาราง + seed ทันทีตอนสตาร์ทเซิร์ฟเวอร์
 import "./db.js";
 import authRoutes from "./routes/auth.js";
+import bookRoutes from "./routes/books.js";
 
 const app = express();
 // ถ้าไม่มี PORT ใน .env ให้ใช้ 3000
@@ -25,8 +26,10 @@ app.get("/", (_req, res) => {
   res.json({ message: "Book library API" });
 });
 
-// เส้นทาง login อยู่ภายใต้ /api เช่น POST /api/login
+// เส้นทาง login: POST /api/login
 app.use("/api", authRoutes);
+// เส้นทางหนังสือ: GET/POST/DELETE /api/books (ต้องมี JWT)
+app.use("/api", bookRoutes);
 
 // เปิดเซิร์ฟเวอร์รอรับ request
 app.listen(PORT, () => {

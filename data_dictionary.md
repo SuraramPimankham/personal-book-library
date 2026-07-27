@@ -25,7 +25,7 @@ JWT ควรฝังอย่างน้อย: `{ id, username, role }` เ�
 | `uid_created` | username ของคนที่กดสร้างแถว (audit) | บันทึกว่าใครเป็นคนเพิ่ม — **ไม่ใช่**ตัวกำหนดเจ้าของ |
 | `uid_updated` | username ของคนที่แก้ไขล่าสุด (audit) | บันทึกว่าใครแก้ล่าสุด |
 
-ตัวอย่าง: admin เพิ่มหนังสือให้ alice → `user_owner = 'alice'`, `uid_created = 'admin'`
+ตัวอย่าง: admin เพิ่มหนังสือให้ spk1 → `user_owner = 'spk1'`, `uid_created = 'admin'`
 
 | กฎ | User (`role = user`) | Admin (`role = admin`) |
 |----|----------------------|-------------------------|
@@ -111,8 +111,9 @@ CREATE TABLE users (
 
 | username | password (plain) | role | หมายเหตุ |
 |----------|------------------|------|----------|
-| `admin` | `password123` | `admin` | ผู้ดูแล — เห็น/จัดการหนังสือทุกคลัง |
-| `alice` | `password123` | `user` | ผู้ใช้ทั่วไป — เห็นเฉพาะคลังของตัวเอง |
+| `admin` | `password123` | `admin` | ผู้ดูแล — เห็น/จัดการหนังสือทุกคลัง (ไม่มีหนังสือใน seed) |
+| `spk1` | `password123` | `user` | ผู้ใช้ทั่วไป — คลังส่วนตัว |
+| `spk2` | `password123` | `user` | ผู้ใช้ทั่วไป — คลังส่วนตัวคนละอันกับ spk1 |
 
 ---
 
@@ -168,7 +169,7 @@ CREATE INDEX idx_books_user_owner ON books(user_owner); -- ค้นคลัง
 
 ```sql
 -- User: ดึงคลังของตัวเอง
-SELECT * FROM books WHERE user_owner = 'alice' ORDER BY id DESC;
+SELECT * FROM books WHERE user_owner = 'spk1' ORDER BY id DESC;
 
 -- Admin: ดึงทุกคลัง
 SELECT * FROM books ORDER BY id DESC;

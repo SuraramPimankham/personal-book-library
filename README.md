@@ -85,7 +85,7 @@ DB_PATH=./data/library.db
 ### สิ่งที่เกิดขึ้นหลังรัน Backend
 
 ถ้ายังไม่มีไฟล์ database ระบบจะสร้างให้อัตโนมัติที่ `backend/data/library.db`  
-พร้อมตาราง `users` และบัญชีทดสอบ (`admin`, `alice`)
+พร้อมตาราง `users` และบัญชีทดสอบ (`admin`, `spk1`, `spk2`)
 
 ### Frontend (ถ้าต้องการเปลี่ยน URL ของ API)
 
@@ -137,6 +137,7 @@ npm run dev
 | username | password | role |
 |----------|----------|------|
 | `admin` | `password123` | admin |
-| `alice` | `password123` | user |
+| `spk1` | `password123` | user |
+| `spk2` | `password123` | user |
 
 ใช้บัญชีใดบัญชีหนึ่งบนหน้า Login เพื่อทดสอบระบบยืนยันตัวตน

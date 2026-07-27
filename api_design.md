@@ -84,8 +84,8 @@ Base URL: `http://localhost:3000`
     "title": "Clean Code",
     "author": "Robert C. Martin",
     "category": "Programming",
-    "user_owner": "alice",
-    "uid_created": "alice",
+    "user_owner": "spk1",
+    "uid_created": "spk1",
     "created_at": "2026-07-27T20:50:00.000Z",
     "uid_updated": null,
     "updated_at": null
@@ -128,7 +128,7 @@ Base URL: `http://localhost:3000`
   "title": "Clean Code",
   "author": "Robert C. Martin",
   "category": "Programming",
-  "user_owner": "alice"
+  "user_owner": "spk1"
 }
 ```
 
@@ -145,8 +145,8 @@ Base URL: `http://localhost:3000`
   "title": "Clean Code",
   "author": "Robert C. Martin",
   "category": "Programming",
-  "user_owner": "alice",
-  "uid_created": "alice",
+  "user_owner": "spk1",
+  "uid_created": "spk1",
   "created_at": "2026-07-27T20:50:00.000Z",
   "uid_updated": null,
   "updated_at": null
@@ -229,7 +229,8 @@ Base URL: `http://localhost:3000`
 | username | password | role |
 |----------|----------|------|
 | `admin` | `password123` | `admin` |
-| `alice` | `password123` | `user` |
+| `spk1` | `password123` | `user` |
+| `spk2` | `password123` | `user` |
 
 ---
 
@@ -239,7 +240,7 @@ Base URL: `http://localhost:3000`
 # Login
 curl -X POST http://localhost:3000/api/login \
   -H "Content-Type: application/json" \
-  -d "{\"username\":\"alice\",\"password\":\"password123\"}"
+  -d "{\"username\":\"spk1\",\"password\":\"password123\"}"
 
 # Get books
 curl http://localhost:3000/api/books \
