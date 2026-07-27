@@ -141,3 +141,14 @@ npm run dev
 | `spk2` | `password123` | user |
 
 ใช้บัญชีใดบัญชีหนึ่งบนหน้า Login เพื่อทดสอบระบบยืนยันตัวตน
+
+## ทดสอบ API (Bruno)
+
+ชุด request สำหรับกรรมการอยู่ที่ [`api-collection/`](api-collection/)
+
+1. ติดตั้ง [Bruno](https://www.usebruno.com/)
+2. Open Collection → เลือกโฟลเดอร์ `api-collection/`
+3. เลือก environment **Local**
+4. รัน Backend ก่อน แล้วเริ่มจาก **Auth → Login (admin)**
+
+รายละเอียดและลำดับทดสอบ: [api-collection/README.md](api-collection/README.md)

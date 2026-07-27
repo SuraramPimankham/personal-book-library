@@ -1,0 +1,26 @@
+meta {
+  name: Login (invalid credentials)
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/api/login
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "username": "admin",
+    "password": "wrong-password"
+  }
+}
+
+docs {
+  UC-01 alternate — คาดหวัง 401 Invalid username or password
+}

@@ -1,0 +1,34 @@
+meta {
+  name: Login (spk1)
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/login
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "username": "spk1",
+    "password": "password123"
+  }
+}
+
+script:post-response {
+  const data = res.getBody();
+  if (data.token) {
+    bru.setEnvVar("spk1Token", data.token);
+    bru.setEnvVar("token", data.token);
+  }
+}
+
+docs {
+  UC-01 — เข้าสู่ระบบ user spk1
+}

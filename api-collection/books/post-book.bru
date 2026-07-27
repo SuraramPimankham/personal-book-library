@@ -1,0 +1,39 @@
+meta {
+  name: POST Book (own library)
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/api/books
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "title": "Bruno Test Book",
+    "author": "Examiner",
+    "category": "Testing"
+  }
+}
+
+script:post-response {
+  const book = res.getBody();
+  if (book && book.id) {
+    bru.setEnvVar("bookId", String(book.id));
+  }
+}
+
+docs {
+  UC-04 — เพิ่มหนังสือในคลังของตัวเอง
+  คาดหวัง 201 และ user_owner = username คนล็อกอิน
+}

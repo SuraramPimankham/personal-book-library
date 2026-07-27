@@ -1,0 +1,29 @@
+meta {
+  name: GET Books
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/books
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+script:post-response {
+  const books = res.getBody();
+  if (Array.isArray(books) && books.length > 0) {
+    bru.setEnvVar("bookId", String(books[0].id));
+  }
+}
+
+docs {
+  UC-02 (user) / UC-03 (admin)
+  - user: เห็นเฉพาะ user_owner = ตัวเอง
+  - admin: เห็นทุกเล่ม
+  เก็บ id ของเล่มแรกไว้ใน bookId สำหรับ DELETE
+}

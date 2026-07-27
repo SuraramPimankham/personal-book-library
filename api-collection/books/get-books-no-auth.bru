@@ -1,0 +1,15 @@
+meta {
+  name: GET Books (no token)
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/api/books
+  body: none
+  auth: none
+}
+
+docs {
+  คาดหวัง 401 — Access denied: session credential missing or expired
+}

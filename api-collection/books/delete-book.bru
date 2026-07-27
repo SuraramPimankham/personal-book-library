@@ -1,0 +1,22 @@
+meta {
+  name: DELETE Book
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{baseUrl}}/api/books/{{bookId}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+docs {
+  UC-05 (user) / UC-06 (admin)
+  ใช้ {{bookId}} จาก GET Books หรือ POST Book
+  - user: ลบได้เฉพาะของตัวเอง
+  - admin: ลบได้ทุกเล่ม
+}

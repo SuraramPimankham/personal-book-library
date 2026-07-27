@@ -1,0 +1,20 @@
+meta {
+  name: GET Users (admin)
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/users
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminToken}}
+}
+
+docs {
+  รายชื่อ user สำหรับ dropdown เจ้าของคลัง (admin only)
+  รัน Login (admin) ก่อน — คาดหวัง 200
+}

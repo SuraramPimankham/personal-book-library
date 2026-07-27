@@ -1,0 +1,20 @@
+meta {
+  name: GET Users (spk1 forbidden)
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/api/users
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{spk1Token}}
+}
+
+docs {
+  user ทั่วไปเรียกไม่ได้ — คาดหวัง 403 Admin only
+  รัน Login (spk1) ก่อน
+}

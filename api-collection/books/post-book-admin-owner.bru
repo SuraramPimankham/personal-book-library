@@ -1,0 +1,33 @@
+meta {
+  name: POST Book (admin assign owner)
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/api/books
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{adminToken}}
+}
+
+body:json {
+  {
+    "title": "Admin Assigned Book",
+    "author": "Examiner",
+    "category": "Testing",
+    "user_owner": "spk1"
+  }
+}
+
+docs {
+  UC-04 — admin กำหนด user_owner ให้ user อื่นได้
+  รัน Login (admin) ก่อน
+}
