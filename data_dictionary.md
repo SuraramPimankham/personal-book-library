@@ -21,16 +21,17 @@ JWT ควรฝังอย่างน้อย: `{ id, username, role }` เ�
 
 | คอลัมน์ | ความหมาย | ใช้ทำอะไร |
 |---------|----------|-----------|
-| `user_owner` | เจ้าของคลัง / เจ้าของหนังสือ (**username** FK → `users.username`) | กรองสิทธิ์ดู/ลบคลังส่วนตัว |
-| `uid_created` | user id ที่กดสร้างแถวนี้ (audit) | บันทึกว่าใครเป็นคนเพิ่ม — **ไม่ใช่**ตัวกำหนดเจ้าของ |
+| `user_owner` | เจ้าของคลัง / เจ้าของหนังสือ (**username**) | กรองสิทธิ์ดู/ลบคลังส่วนตัว |
+| `uid_created` | username ของคนที่กดสร้างแถว (audit) | บันทึกว่าใครเป็นคนเพิ่ม — **ไม่ใช่**ตัวกำหนดเจ้าของ |
+| `uid_updated` | username ของคนที่แก้ไขล่าสุด (audit) | บันทึกว่าใครแก้ล่าสุด |
 
-ตัวอย่าง: admin เพิ่มหนังสือให้ alice → `user_owner = 'alice'`, `uid_created = admin.id`
+ตัวอย่าง: admin เพิ่มหนังสือให้ alice → `user_owner = 'alice'`, `uid_created = 'admin'`
 
 | กฎ | User (`role = user`) | Admin (`role = admin`) |
 |----|----------------------|-------------------------|
 | เจ้าของหนังสือ | `user_owner` = username ของตัวเองตอนเพิ่ม | ตั้ง `user_owner` เป็น username ของเจ้าของคลังได้ |
 | ดูรายการ | `GET` กรอง `user_owner = username ของตัวเอง` | `GET` ได้ทุกแถว |
-| เพิ่ม | `POST` ตั้ง `user_owner` = username ตัวเอง + `uid_created` = id ตัวเอง | `POST` ตั้ง `user_owner` ตาม username เจ้าของคลัง + `uid_created` = admin.id |
+| เพิ่ม | `POST` ตั้ง `user_owner` + `uid_created` = username ตัวเอง | `POST` ตั้ง `user_owner` ตามเจ้าของคลัง + `uid_created` = `'admin'` |
 | ลบ | ลบได้เฉพาะ `user_owner` = username ตัวเอง | ลบหนังสือของใครก็ได้ |
 | Auth | ต้องมี JWT | ต้องมี JWT |
 
@@ -43,9 +44,9 @@ erDiagram
     text username UK
     text password_hash
     text role
-    integer uid_created
+    text uid_created
     text created_at
-    integer uid_updated
+    text uid_updated
     text updated_at
   }
   books {
@@ -54,9 +55,9 @@ erDiagram
     text author
     text category
     text user_owner FK
-    integer uid_created
+    text uid_created
     text created_at
-    integer uid_updated
+    text uid_updated
     text updated_at
   }
   users ||--o{ books : "owns_via_user_owner_username"
@@ -64,11 +65,13 @@ erDiagram
 
 ## Audit fields (ใช้ร่วมทุกตาราง)
 
+เก็บเป็น **username (TEXT)** ไม่ใช่ id
+
 | Column | ความหมาย |
 |--------|----------|
-| `uid_created` | user สร้างแถว (audit เท่านั้น — ไม่ใช่เจ้าของคลัง) |
+| `uid_created` | username ของคนสร้างแถว (audit — ไม่ใช่เจ้าของคลัง) |
 | `created_at` | สร้างเมื่อ |
-| `uid_updated` | user แก้ไขล่าสุด |
+| `uid_updated` | username ของคนแก้ไขล่าสุด |
 | `updated_at` | แก้ไขล่าสุดเมื่อ |
 
 ---
@@ -83,9 +86,9 @@ erDiagram
 | `username` | TEXT | | Yes | NO | | ชื่อผู้ใช้สำหรับ login |
 | `password_hash` | TEXT | | | NO | | รหัสผ่านที่ hash แล้ว (bcrypt) |
 | `role` | TEXT | | | NO | `'user'` | บทบาท: `admin` หรือ `user` |
-| `uid_created` | INTEGER | | | YES | | user สร้างแถว (audit) |
+| `uid_created` | TEXT | | | YES | | username ของคนสร้างแถว (audit) |
 | `created_at` | TEXT | | | NO | | สร้างเมื่อ (ISO 8601) |
-| `uid_updated` | INTEGER | | | YES | | user แก้ไขล่าสุด |
+| `uid_updated` | TEXT | | | YES | | username ของคนแก้ไขล่าสุด |
 | `updated_at` | TEXT | | | YES | | แก้ไขล่าสุดเมื่อ (ISO 8601) |
 
 ### SQL + comments
@@ -96,9 +99,9 @@ CREATE TABLE users (
   username      TEXT    NOT NULL UNIQUE,           -- ชื่อผู้ใช้สำหรับ login
   password_hash TEXT    NOT NULL,                  -- รหัสผ่านที่ hash แล้ว (bcrypt)
   role          TEXT    NOT NULL DEFAULT 'user',   -- บทบาท: admin | user
-  uid_created   INTEGER,                           -- user สร้างแถว (audit)
+  uid_created   TEXT,                              -- username คนสร้างแถว (audit)
   created_at    TEXT    NOT NULL,                  -- สร้างเมื่อ
-  uid_updated   INTEGER,                           -- user แก้ไขล่าสุด
+  uid_updated   TEXT,                              -- username คนแก้ไขล่าสุด
   updated_at    TEXT,                              -- แก้ไขล่าสุดเมื่อ
   CHECK (role IN ('admin', 'user'))
 );
@@ -115,7 +118,7 @@ CREATE TABLE users (
 
 ## Table: `books`
 
-ตารางหนังสือ — **เจ้าของอยู่ที่ `user_owner` (username)**; `uid_created` เป็นแค่ audit ว่าใครกดเพิ่ม
+ตารางหนังสือ — **เจ้าของอยู่ที่ `user_owner` (username)**; `uid_created` / `uid_updated` เป็น audit ด้วย username
 
 | Column | Type | PK | UK | Null | Default | Comment |
 |--------|------|----|----|------|---------|---------|
@@ -124,9 +127,9 @@ CREATE TABLE users (
 | `author` | TEXT | | | YES | | ผู้แต่ง |
 | `category` | TEXT | | | YES | | หมวดหมู่ |
 | `user_owner` | TEXT | | | NO | | **เจ้าของหนังสือ / เจ้าของคลัง** (username FK → users.username) |
-| `uid_created` | INTEGER | | | YES | | user id ที่กดสร้างแถว (audit) — ไม่ใช่เจ้าของ |
+| `uid_created` | TEXT | | | YES | | username ของคนที่กดสร้างแถว (audit) — ไม่ใช่เจ้าของ |
 | `created_at` | TEXT | | | NO | | สร้างเมื่อ (ISO 8601) |
-| `uid_updated` | INTEGER | | | YES | | user แก้ไขล่าสุด |
+| `uid_updated` | TEXT | | | YES | | username ของคนแก้ไขล่าสุด |
 | `updated_at` | TEXT | | | YES | | แก้ไขล่าสุดเมื่อ (ISO 8601) |
 
 ### SQL + comments
@@ -138,9 +141,9 @@ CREATE TABLE books (
   author      TEXT,                              -- ผู้แต่ง
   category    TEXT,                              -- หมวดหมู่
   user_owner  TEXT    NOT NULL,                  -- เจ้าของหนังสือ (username FK)
-  uid_created INTEGER,                           -- user id สร้างแถว (audit) ไม่ใช่เจ้าของ
+  uid_created TEXT,                              -- username คนสร้างแถว (audit) ไม่ใช่เจ้าของ
   created_at  TEXT    NOT NULL,                  -- สร้างเมื่อ
-  uid_updated INTEGER,                           -- user แก้ไขล่าสุด
+  uid_updated TEXT,                              -- username คนแก้ไขล่าสุด
   updated_at  TEXT,                              -- แก้ไขล่าสุดเมื่อ
   FOREIGN KEY (user_owner) REFERENCES users(username)
 );
@@ -157,7 +160,8 @@ CREATE INDEX idx_books_user_owner ON books(user_owner); -- ค้นคลัง
 - **Admin:** `GET` ได้ทุกแถว; `DELETE` ไม่ต้องเช็ค `user_owner`
 - ตอน INSERT:
   - ตั้ง `user_owner` = username เจ้าของคลัง (ปกติ = คนที่ล็อกอิน; admin อาจระบุ username อื่นได้)
-  - ตั้ง `uid_created` = `id` ของคนที่ล็อกอินตอนกดบันทึก (audit)
+  - ตั้ง `uid_created` = `username` ของคนที่ล็อกอินตอนกดบันทึก (audit)
+- ตอน UPDATE: ตั้ง `uid_updated` = `username` ของคนที่ล็อกอิน + `updated_at`
 - รูปแบบเวลาแนะนำ: ISO 8601 เช่น `2026-07-27T20:50:00.000Z`
 
 ### ตัวอย่าง query

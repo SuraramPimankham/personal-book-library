@@ -11,7 +11,8 @@ personal-book-library/
 ├── uploads/          # ไฟล์อัปโหลด
 ├── api-collection/   # Bruno (.bru) ชุดทดสอบ API endpoint
 ├── data_dictionary.md
-└── usecase.md
+├── usecase.md
+└── api_design.md
 ```
 
 ## Frontend — สร้างและรัน

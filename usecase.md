@@ -93,7 +93,7 @@ sequenceDiagram
 | Actor | User หรือ Admin |
 | Goal | เพิ่มหนังสือ — เจ้าของคือคนที่ล็อกอิน (หรือที่ admin กำหนด) |
 | Precondition | ล็อกอินแล้ว |
-| Main flow | 1. กรอกข้อมูลหนังสือ<br>2. `POST /api/books` + Bearer<br>3. ตั้ง `user_owner` = username เจ้าของคลัง, `uid_created` = id คนที่ล็อกอิน (audit)<br>4. อัปเดตรายการ + alert<br>5. เคลียร์ฟอร์ม + focus ช่องชื่อ |
+| Main flow | 1. กรอกข้อมูลหนังสือ<br>2. `POST /api/books` + Bearer<br>3. ตั้ง `user_owner` = username เจ้าของคลัง, `uid_created` = username คนที่ล็อกอิน (audit)<br>4. อัปเดตรายการ + alert<br>5. เคลียร์ฟอร์ม + focus ช่องชื่อ |
 | Alternate | ไม่มี token → 401 |
 | Postcondition | หนังสือใหม่มี `user_owner` ชัดเจน |
 
