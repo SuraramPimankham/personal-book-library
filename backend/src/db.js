@@ -79,6 +79,7 @@ function seedUsers() {
 }
 
 // ใส่หนังสือตัวอย่างเฉพาะคลัง user (spk1 / spk2) — admin ไม่มีหนังสือเริ่มต้น
+// อย่างน้อย 20 รายการสำหรับ mockup / ทดสอบ
 function seedBooks() {
   const count = db.prepare("SELECT COUNT(*) AS c FROM books").get().c;
   if (count > 0) return;
@@ -89,28 +90,35 @@ function seedBooks() {
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)
   `);
 
-  // คลังของ spk1
-  insert.run(
-    "Clean Code",
-    "Robert C. Martin",
-    "Programming",
-    "spk1",
-    "spk1",
-    now,
-    null,
-    null
-  );
-  // คลังของ spk2
-  insert.run(
-    "The Pragmatic Programmer",
-    "Andrew Hunt",
-    "Programming",
-    "spk2",
-    "spk2",
-    now,
-    null,
-    null
-  );
+  // [title, author, category, user_owner]
+  const samples = [
+    ["Clean Code", "Robert C. Martin", "Programming", "spk1"],
+    ["The Pragmatic Programmer", "Andrew Hunt", "Programming", "spk2"],
+    ["Design Patterns", "Erich Gamma", "Programming", "spk1"],
+    ["Refactoring", "Martin Fowler", "Programming", "spk2"],
+    ["You Don't Know JS Yet", "Kyle Simpson", "Programming", "spk1"],
+    ["Eloquent JavaScript", "Marijn Haverbeke", "Programming", "spk2"],
+    ["Introduction to Algorithms", "CLRS", "Computer Science", "spk1"],
+    ["Operating System Concepts", "Abraham Silberschatz", "Computer Science", "spk2"],
+    ["Computer Networks", "Andrew S. Tanenbaum", "Computer Science", "spk1"],
+    ["Database System Concepts", "Abraham Silberschatz", "Database", "spk2"],
+    ["SQL Performance Explained", "Markus Winand", "Database", "spk1"],
+    ["Designing Data-Intensive Applications", "Martin Kleppmann", "Database", "spk2"],
+    ["The Design of Everyday Things", "Don Norman", "Design", "spk1"],
+    ["Don't Make Me Think", "Steve Krug", "Design", "spk2"],
+    ["Atomic Habits", "James Clear", "Self-help", "spk1"],
+    ["Deep Work", "Cal Newport", "Self-help", "spk2"],
+    ["Sapiens", "Yuval Noah Harari", "History", "spk1"],
+    ["Thinking, Fast and Slow", "Daniel Kahneman", "Psychology", "spk2"],
+    ["The Lean Startup", "Eric Ries", "Business", "spk1"],
+    ["Inspired", "Marty Cagan", "Product", "spk2"],
+    ["Domain-Driven Design", "Eric Evans", "Architecture", "spk1"],
+    ["Clean Architecture", "Robert C. Martin", "Architecture", "spk2"],
+  ];
+
+  for (const [title, author, category, owner] of samples) {
+    insert.run(title, author, category, owner, owner, now, null, null);
+  }
 }
 seedUsers();
 seedBooks();
