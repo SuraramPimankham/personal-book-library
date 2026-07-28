@@ -11,6 +11,9 @@ personal-book-library/
 ├── frontend/         # React + Vite
 ├── uploads/          # ไฟล์อัปโหลด
 ├── api-collection/   # Bruno (.bru) ชุดทดสอบ API endpoint
+├── test-case/        # Excel test cases + tc-files รายเคส
+├── checklist.md      # เกณฑ์ประเมิน 7 ข้อ แมปกับ TC
+├── REFLECTION.md     # สะท้อนการทำงานสั้น ๆ
 ├── data_dictionary.md
 ├── usecase.md
 └── api_design.md
@@ -152,3 +155,10 @@ npm run dev
 4. รัน Backend ก่อน แล้วเริ่มจาก **Auth → Login (admin)**
 
 รายละเอียดและลำดับทดสอบ: [api-collection/README.md](api-collection/README.md)
+
+## Test Case / Checklist
+
+- Excel สรุป 21 TC: [`test-case/Personal_Book_Library_Test_Cases.xlsx`](test-case/Personal_Book_Library_Test_Cases.xlsx)
+- รายละเอียดรายเคส: [`test-case/tc-files/`](test-case/tc-files/)
+- เกณฑ์ประเมินโจทย์ 7 ข้อ แมปกับ TC: [`checklist.md`](checklist.md)
+- สะท้อนการทำงาน: [`REFLECTION.md`](REFLECTION.md)
