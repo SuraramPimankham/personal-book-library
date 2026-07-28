@@ -85,7 +85,7 @@ export default function LibraryPage({ onLogout, onUnauthorized }) {
     }
   }, [lastAction, books]);
 
-  // useMemo: นับจำนวน + กรองหมวดหมู่ โดยไม่คำนวณซ้ำทุกเรนเดอร์ถ้าข้อมูลไม่เปลี่ยน
+  // useMemo: นับจำนวน "ตามที่แสดงหลังกรอง" + กรองหมวดหมู่
   const { totalCount, filteredBooks, categories } = useMemo(() => {
     const cats = [
       ...new Set(books.map((b) => b.category).filter(Boolean)),
@@ -96,7 +96,7 @@ export default function LibraryPage({ onLogout, onUnauthorized }) {
       : books;
 
     return {
-      totalCount: books.length,
+      totalCount: filtered.length,
       filteredBooks: filtered,
       categories: cats,
     };
